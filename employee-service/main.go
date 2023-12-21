@@ -1,14 +1,11 @@
 package main
 
 import (
-	"Insurance/internal/api_db/redis_db"
 	"Insurance/internal/api_db/reindexer_db"
 	"Insurance/internal/handler"
 	"Insurance/internal/model"
 	"Insurance/internal/service"
-	"context"
 	"fmt"
-	"github.com/redis/go-redis/v9"
 	"github.com/restream/reindexer/v3"
 	_ "github.com/restream/reindexer/v3/bindings/cproto"
 	"github.com/spf13/viper"
@@ -40,7 +37,7 @@ func main() {
 
 	logging.Info("Connection to reindexer DB successful!")
 
-	rdb7 := redis.NewClient(&redis.Options{
+	/*rdb7 := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", viper.GetString("redis.ip"), viper.GetString("redis.port")),
 		Password: "",
 		DB:       11,
@@ -62,12 +59,12 @@ func main() {
 		log.Fatalf("redis db12 connection: %v", err)
 	}
 
-	logging.Info("Connection to redis DB12 successful!")
+	logging.Info("Connection to redis DB12 successful!")*/
 
 	employeeApiDB := reindexer_db.NewEmployeeApiDB(db)
-	authRedisApiDB := redis_db.NewRedisApiDB(rdb7, rdb8)
+	//authRedisApiDB := redis_db.NewRedisApiDB(rdb7, rdb8)
 
-	s := service.NewService(employeeApiDB, authRedisApiDB)
+	s := service.NewService(employeeApiDB) //, authRedisApiDB)
 
 	h := handler.NewHandler(s)
 

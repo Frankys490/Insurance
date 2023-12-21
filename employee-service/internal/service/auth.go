@@ -1,7 +1,6 @@
 package service
 
 import (
-	"Insurance/internal/api_db/redis_db"
 	"Insurance/internal/api_db/reindexer_db"
 	"Insurance/internal/model"
 	"Insurance/pkg/custom_errors"
@@ -14,13 +13,13 @@ import (
 
 type AuthServiceImpl struct {
 	employeeApi reindexer_db.EmployeeApi
-	redisApi    redis_db.RedisApi
+	//redisApi    redis_db.RedisApi
 }
 
-func NewAuthService(employeeApi reindexer_db.EmployeeApi, redisApi redis_db.RedisApi) *AuthServiceImpl {
+func NewAuthService(employeeApi reindexer_db.EmployeeApi /*, redisApi redis_db.RedisApi*/) *AuthServiceImpl {
 	return &AuthServiceImpl{
 		employeeApi: employeeApi,
-		redisApi:    redisApi,
+		//redisApi:    redisApi,
 	}
 }
 
@@ -32,16 +31,16 @@ func (s *AuthServiceImpl) GenerateHashSingInService(req *model.GenerateHashHandl
 		return nil, custom_errors.New(errCustom.Code, "get employee by username DB: "+errCustom.Message)
 	}
 
-	var trialPass, trialActive, trialOnline bool
+	//var trialPass, trialActive, trialOnline bool
 
 	err := bcrypt.CompareHashAndPassword([]byte(employee.Password), []byte(req.Password))
-	if err == nil {
+	/*if err == nil {
 		trialPass = true
 	}
 
 	if employee.ActiveStatus == 1 {
 		trialActive = true
-	}
+	}*/
 
 	_, err = rand.Read(salt)
 	if err != nil {
@@ -55,7 +54,7 @@ func (s *AuthServiceImpl) GenerateHashSingInService(req *model.GenerateHashHandl
 		Hash:     hex.EncodeToString(hashVer[:]),
 	}
 
-	reqRedis := &model.CreateRedisEmployeeSingInDB11Req{
+	/*reqRedis := &model.CreateRedisEmployeeSingInDB11Req{
 		Key:      employee.Username + "__" + hex.EncodeToString(hashVer[:]),
 		Active:   trialActive,
 		Password: trialPass,
@@ -68,7 +67,7 @@ func (s *AuthServiceImpl) GenerateHashSingInService(req *model.GenerateHashHandl
 	errCustom = s.redisApi.CreateRedisEmployeeSingInDB11(reqRedis)
 	if errCustom != nil {
 		return nil, custom_errors.New(errCustom.Code, "create redis employee sing in DB11: "+errCustom.Message)
-	}
+	}*/
 
 	return loss, nil
 }

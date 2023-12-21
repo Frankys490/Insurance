@@ -1,0 +1,13 @@
+db:
+  scheme: cproto
+  hostname: 127.0.0.1
+  port: 6534
+  path: insurance
+http:
+  port: :3308
+redis:
+  ip: 192.168.10.111
+  port: 6379
+jwt:
+  domain: bytrip.ru
+  key: bytrip
